@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.common.name }}-pv-0
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app: {{ .Values.statefulset.app }}
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/hdd/k8s/elasticsearch
+  storageClassName: manual

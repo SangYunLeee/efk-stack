@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.statefulset.name }}
+  namespace: {{ .Values.common.namespace }}
+spec:
+  serviceName: {{ .Values.statefulset.name }}-service
+  replicas: {{ .Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.statefulset.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.statefulset.app }}
+    spec:
+      containers:
+        - name: {{ .Values.statefulset.containerName }}
+          image: {{ .Values.statefulset.image }}:{{ .Values.statefulset.tag }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: elasticsearch-data
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "512M"
+            limits:
+              cpu: "1"
+              memory: "4G"
+          ports:
+            - containerPort: {{ .Values.statefulset.containerPort }}
+              protocol: {{ .Values.statefulset.protocol }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.common.name }}-configmap
+            - secretRef:
+                name: {{ .Values.common.name }}-secret
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "/bin/sh", "-c", "kill -TERM 1" ]
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          command: [ "sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data" ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: elasticsearch-data
+              mountPath: /usr/share/elasticsearch/data
+      nodeSelector:
+        type: dev
+  volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi

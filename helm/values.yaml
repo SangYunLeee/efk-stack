@@ -1,0 +1,43 @@
+common:
+  name: elasticsearch-9
+  namespace: monitoring
+#onione deployment values
+statefulset:
+  #metadata
+  name: elasticsearch-9
+  #other
+  replicas: 1
+  #template
+  app: elasticsearch-9
+  #imageInfo
+  image : elasticsearch
+  tag: "9.0.2"
+  #containers
+  containerName: elasticsearch
+  containerPort: 9200
+  protocol: TCP
+  #securtiyContext
+  runAsUser: 1000
+  runAsGroup: 1000
+
+#onione service values
+service:
+  #spec.port
+  port: 9200
+  targetPort: 9200
+  #spec.type
+  type: ClusterIP
+
+configmap:
+  node.name: es01
+  cluster.name: es-docker-cluster
+  discovery.type: single-node
+  xpack.security.enabled: 'true'
+  xpack.security.http.ssl.enabled: 'false'
+
+secret:
+  ELASTIC_PASSWORD: Y2hhbmdlbWU=
+
+# ingress
+ingress:
+  host: example.com
