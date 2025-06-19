@@ -1,5 +1,10 @@
 version: "3.8"
 
+networks:
+  efk-network:
+    driver: bridge
+    name: efk-stack-network
+
 services:
   elasticsearch:
     image: elasticsearch:9.0.2
@@ -21,3 +26,19 @@ services:
       - 9300:9300
     volumes:
       - ./data/es-data:/usr/share/elasticsearch/data
+    networks:
+      - efk-network
+
+  kibana:
+    image: kibana:9.0.2
+    volumes:
+      - ./data/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_PASSWORD=changeme
+    depends_on:
+      - elasticsearch
+    networks:
+      - efk-network

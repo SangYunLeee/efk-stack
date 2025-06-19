@@ -146,6 +146,14 @@ docker stats es-single-node
 - [ ] 로그 수집 파이프라인 구성
 - [ ] 모니터링 대시보드 설정
 
-## 라이선스
 
-이 프로젝트는 MIT 라이선스 하에 배포됩니다.
+```bash
+# elasticsearch 터미널 진입
+docker exec -it es-single-node bash
+# 키바나를 위한 서비스 토큰 생성
+bin/elasticsearch-service-tokens create elastic/kibana my-token
+
+# 키바나에 토큰 적용
+# kibana.yml
+# serviceAccountToken: "~~"
+```
