@@ -1,0 +1,11 @@
+apm-server:
+  host: "0.0.0.0:8200"
+  kibana:
+    enabled: true
+    host: "http://host.docker.internal:5601"
+    username: elastic
+    password: changeme
+output.elasticsearch:
+  hosts: ["http://host.docker.internal:9200"]
+  username: elastic
+  password: changeme

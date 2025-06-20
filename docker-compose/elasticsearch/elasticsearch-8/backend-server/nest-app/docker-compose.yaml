@@ -1,0 +1,11 @@
+services:
+  backend:
+    image: nest-app-with-apm
+    build:
+      context: .
+    ports:
+      - "13001:13001"
+    env_file:
+      - ./.env
+    environment:
+      NODE_PORT: 13001

@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  apm-server:
+    image: elastic/apm-server:8.17.7
+    volumes:
+      - ./data/apm-server.yml:/usr/share/apm-server/apm-server.yml
+    ports:
+      - 8200:8200
+    environment:
+      - ELASTICSEARCH_HOSTS=http://host.docker.internal:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=changeme

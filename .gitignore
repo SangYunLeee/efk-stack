@@ -1,1 +1,3 @@
-docker-compose/elasticsearch/elasticsearch-9/data
+**/elasticsearch-*/data
+**/node_modules
+
